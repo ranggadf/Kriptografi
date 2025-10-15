@@ -9,6 +9,8 @@ use App\Http\Controllers\RC4_dekripsiController;
 use App\Http\Controllers\AES_dekripsiController;
 use App\Http\Controllers\Caesar_dekripsiController;
 use App\Http\Controllers\Vigenere_dekripsiController;
+use App\Http\Controllers\DekripsiBerlapisController;
+use App\Http\Controllers\EnkripsiBerlapisController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -64,3 +66,15 @@ Route::post('/dekripsi/caesar', [Caesar_dekripsiController::class, 'decrypt'])->
 // === Route Dekripsi Vigenere Auto-Key ===
 Route::get('/dekripsi/vigenere', [Vigenere_dekripsiController::class, 'indexDecrypt']);
 Route::post('/dekripsi/vigenere', [Vigenere_dekripsiController::class, 'decrypt'])->name('vigenere.decrypt');
+
+// Dekripsi Berlapis
+
+Route::get('/dekripsi/berlapis', [DekripsiBerlapisController::class, 'index'])->name('dekripsi.berlapis');
+Route::post('/dekripsi/berlapis', [DekripsiBerlapisController::class, 'decrypt'])->name('dekripsi.berlapis.proses');
+
+//
+// Enkripsi Berlapis
+
+
+Route::get('/enkripsi/berlapis', [EnkripsiBerlapisController::class, 'index'])->name('enkripsi.berlapis');
+Route::post('/enkripsi/berlapis', [EnkripsiBerlapisController::class, 'encrypt'])->name('enkripsi.berlapis.proses');

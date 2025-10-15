@@ -15,7 +15,7 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       width: 100%;
     }
 
@@ -33,8 +33,8 @@
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
     }
 
     .card {
@@ -42,23 +42,29 @@
       padding: 25px;
       border-radius: 12px;
       text-align: center;
-      transition: 0.3s;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .card:hover {
       background: #1e293b;
-      transform: translateY(-4px);
+      transform: translateY(-5px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
     }
 
     .card h2 {
       color: #34d399;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .card p {
       font-size: 14px;
       color: #94a3b8;
       margin-bottom: 20px;
+      min-height: 50px;
     }
 
     .btn {
@@ -71,6 +77,7 @@
       font-weight: bold;
       text-decoration: none;
       cursor: pointer;
+      transition: background 0.3s;
     }
 
     .btn:hover {
@@ -108,6 +115,12 @@
     <p>Pilih salah satu metode dekripsi berikut untuk memulai:</p>
 
     <div class="cards">
+      <div class="card">
+        <h2>Proses Dekripsi Berlapis</h2>
+        <p>Dekripsi teks yang dienkripsi secara berlapis (Vigenère → Caesar → AES → RC4).</p>
+        <a href="{{ url('/dekripsi/berlapis') }}" class="btn">Gunakan</a>
+      </div>
+
       <div class="card">
         <h2>RC4</h2>
         <p>Dekripsi hasil enkripsi RC4 kembali ke teks asli.</p>

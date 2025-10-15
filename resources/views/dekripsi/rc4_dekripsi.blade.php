@@ -102,7 +102,7 @@
       color: #34d399;
     }
 
-    /* Tombol Navigasi */
+    /* Tombol Navigasi kiri */
     .nav-buttons {
       position: fixed;
       top: 20px;
@@ -120,7 +120,7 @@
       border-radius: 8px;
       font-weight: bold;
       text-decoration: none;
-      width: 180px;
+      width: 200px;
       text-align: center;
       transition: all 0.2s;
     }
@@ -129,27 +129,58 @@
       background: #34d399;
       color: #0f172a;
     }
+
+    /* Tombol bawah (ke AES) */
+    .btn-next {
+      margin-top: 15px;
+      background: #3b82f6;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      width: 100%;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-next:hover {
+      background: #2563eb;
+    }
+
+    .btn-next:disabled {
+      background: #475569;
+      cursor: not-allowed;
+    }
   </style>
 
   <script>
     function copyToClipboard() {
       const copyText = document.getElementById("plaintext");
       if (!copyText) return;
+
       copyText.select();
       copyText.setSelectionRange(0, 99999);
       document.execCommand("copy");
-      alert("✅ Hasil dekripsi RC4 berhasil disalin ke clipboard!");
+
+      // Aktifkan tombol lanjut ke AES
+      const nextBtn = document.getElementById("nextBtn");
+      if (nextBtn) {
+        nextBtn.disabled = false;
+      }
+
+      alert("✅ Hasil dekripsi RC4 berhasil disalin!\nSekarang Anda bisa lanjut ke dekripsi AES.");
     }
   </script>
 </head>
 <body>
-  <!-- Navigasi -->
+  <!-- Navigasi kiri -->
   <div class="nav-buttons">
     <a href="{{ url('/rc4') }}" class="nav-btn">← Kembali ke Enkripsi RC4</a>
     <a href="{{ url('/dekripsi') }}" class="nav-btn">🏠 Halaman Dekripsi</a>
   </div>
 
-  <!-- Card Utama -->
+  <!-- Card utama -->
   <div class="card">
     <h1>RC4 Cipher - Dekripsi</h1>
 
@@ -178,9 +209,16 @@
 
       <p class="note">
         ✅ Ini adalah hasil akhir dari <strong>dekripsi RC4</strong>.<br>
-        Jika Anda melakukan dekripsi berantai, gunakan hasil ini untuk tahap sebelumnya:
+        Salin hasil ini terlebih dahulu sebelum lanjut ke tahap berikutnya:
         <strong>AES → Caesar → Vigenère</strong>.
       </p>
+
+      <!-- Tombol Lanjut ke AES di bawah -->
+      <form action="{{ url('/dekripsi/aes') }}" method="GET">
+        <button type="submit" id="nextBtn" class="btn-next" disabled>
+          ➡️ Lanjut ke Dekripsi AES
+        </button>
+      </form>
     @endisset
   </div>
 </body>
