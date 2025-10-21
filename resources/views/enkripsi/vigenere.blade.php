@@ -113,5 +113,28 @@
       });
     }
   </script>
+  <script>
+  const plaintextInput = document.getElementById("plaintext");
+  const keyInput = document.getElementById("key");
+
+  // Fungsi untuk membatasi panjang key sesuai panjang plaintext
+  function limitKeyLength() {
+    const plaintextLength = plaintextInput.value.length;
+    if (keyInput.value.length > plaintextLength) {
+      keyInput.value = keyInput.value.slice(0, plaintextLength);
+    }
+  }
+
+  // Saat user mengetik plaintext, batasi ulang panjang key
+  plaintextInput.addEventListener("input", () => {
+    limitKeyLength();
+  });
+
+  // Saat user mengetik key, pastikan panjang tidak lebih dari plaintext
+  keyInput.addEventListener("input", () => {
+    limitKeyLength();
+  });
+</script>
+
 </body>
 </html>

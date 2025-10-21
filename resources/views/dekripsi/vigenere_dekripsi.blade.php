@@ -46,10 +46,11 @@
       width: 100%;
       padding: 10px;
       margin-top: 6px;
-      border: none;
+      border: 2px solid transparent;
       border-radius: 8px;
       background: #1e293b;
       color: #e6eef8;
+      transition: border-color 0.3s;
     }
 
     .btn {
@@ -163,6 +164,28 @@
 
     <a href="{{ url('/') }}" class="back-link">← Kembali ke Halaman Utama</a>
   </div>
+
+  <!-- ✅ Validasi panjang key -->
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const ciphertextInput = document.getElementById("ciphertext");
+  const keyInput = document.getElementById("key");
+
+  // Fungsi membatasi panjang key sesuai panjang ciphertext
+  function limitKeyLength() {
+    const maxLength = ciphertextInput.value.trim().length;
+    if (keyInput.value.length > maxLength) {
+      keyInput.value = keyInput.value.slice(0, maxLength);
+    }
+  }
+
+  // Saat user mengetik key
+  keyInput.addEventListener("input", limitKeyLength);
+
+  // Opsional: juga batasi saat user mengubah ciphertext
+  ciphertextInput.addEventListener("input", limitKeyLength);
+});
+</script>
 
 </body>
 </html>
