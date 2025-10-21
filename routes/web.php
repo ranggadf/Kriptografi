@@ -27,8 +27,8 @@ Route::get('/', function () {
 });
 
 // Vigenere routes
-Route::get('/viginere', [VigenereController::class, 'index']);
-Route::post('/viginere/encrypt', [VigenereController::class, 'encrypt'])->name('vigenere.encrypt');
+Route::get('/vigenere', [VigenereController::class, 'index']);
+Route::post('/vigenere/encrypt', [VigenereController::class, 'encrypt'])->name('vigenere.encrypt');
 // Caesar routes
 Route::get('/caesar', [CaesarController::class, 'index'])->name('caesar.index');
 Route::post('/caesar/encrypt', [CaesarController::class, 'encrypt'])->name('caesar.encrypt');

@@ -118,7 +118,7 @@
       <div class="card">
         <h2>Vigenère Cipher</h2>
         <p>Enkripsi teks dengan metode substitusi berbasis kata kunci.</p>
-        <a href="{{ url('/viginere') }}" class="btn">Gunakan</a>
+        <a href="{{ url('/vigenere') }}" class="btn">Gunakan</a>
       </div>
 
       <div class="card">
