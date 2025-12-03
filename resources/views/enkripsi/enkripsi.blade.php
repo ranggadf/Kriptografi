@@ -112,9 +112,10 @@
      <div class="card">
         <h2>EnkripsiBerlapis</h2>
         <p>Enkripsi teks dengan metode substitusi berbasis kata kunci.</p>
-        <a href="{{ url('/enkripsi/berlapis') }}" class="btn">Gunakan</a>
+        <a href="{{ url('/enkripsibertahap') }}" class="btn">Gunakan</a>
       </div>
 
+     
       <div class="card">
         <h2>Vigenère Cipher</h2>
         <p>Enkripsi teks dengan metode substitusi berbasis kata kunci.</p>

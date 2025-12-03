@@ -118,9 +118,10 @@
       <div class="card">
         <h2>Proses Dekripsi Berlapis</h2>
         <p>Dekripsi teks yang dienkripsi secara berlapis (Vigenère → Caesar → AES → RC4).</p>
-        <a href="{{ url('/dekripsi/berlapis') }}" class="btn">Gunakan</a>
+        <a href="{{ url('/dekripsibertahap') }}" class="btn">Gunakan</a>
       </div>
 
+     
       <div class="card">
         <h2>RC4</h2>
         <p>Dekripsi hasil enkripsi RC4 kembali ke teks asli.</p>

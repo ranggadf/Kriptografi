@@ -79,58 +79,28 @@ class EnkripsiBerlapisController extends Controller
     }
 
     // === Vigenère ===
-  private function vigenereEncrypt($plaintext, $key)
-{
-    // =============================
-    // 🔹 Langkah 1: Normalisasi key
-    // =============================
-    $key = strtolower($key);
-    $convertedKey = '';
+    private function vigenereEncrypt($plaintext, $key)
+    {
+        $plaintext = strtoupper($plaintext);
+        $key = strtoupper($key);
+        $ciphertext = '';
+        $j = 0;
 
-    // Cek apakah key mengandung angka
-    if (preg_match('/[0-9]/', $key)) {
-        foreach (str_split($key) as $ch) {
-            if (ctype_alpha($ch)) {
-                // Huruf tetap huruf
-                $convertedKey .= $ch;
-            } elseif (ctype_digit($ch)) {
-                // Angka diubah ke huruf: 1->B, 2->C, ..., 25->Z, 0->A
-                $num = intval($ch);
-                // pastikan 0 = A
-                $letter = chr((($num % 26)) + ord('A') - 1);
-                if ($num == 0) $letter = 'A';
-                $convertedKey .= strtolower($letter);
+        for ($i = 0; $i < strlen($plaintext); $i++) {
+            $p = $plaintext[$i];
+            if ($p >= 'A' && $p <= 'Z') {
+                $k = $key[$j % strlen($key)];
+                $c = chr(((ord($p) + ord($k) - 2 * ord('A')) % 26) + ord('A'));
+                $ciphertext .= $c;
+                $key .= $p; // auto-key
+                $j++;
+            } else {
+                $ciphertext .= $p;
             }
         }
-    } else {
-        // Jika semua huruf, gunakan apa adanya
-        $convertedKey = $key;
+
+        return $ciphertext;
     }
-
-    $key = strtoupper($convertedKey);
-    $plaintext = strtoupper($plaintext);
-    $ciphertext = '';
-    $j = 0;
-
-    // =============================
-    // 🔹 Langkah 2: Proses enkripsi
-    // =============================
-    for ($i = 0; $i < strlen($plaintext); $i++) {
-        $p = $plaintext[$i];
-        if ($p >= 'A' && $p <= 'Z') {
-            $k = $key[$j % strlen($key)];
-            $c = chr(((ord($p) + ord($k) - 2 * ord('A')) % 26) + ord('A'));
-            $ciphertext .= $c;
-            $key .= $p; // auto-key
-            $j++;
-        } else {
-            $ciphertext .= $p;
-        }
-    }
-
-    return $ciphertext;
-}
-
 
     // === Tampilkan form utama ===
     public function index()

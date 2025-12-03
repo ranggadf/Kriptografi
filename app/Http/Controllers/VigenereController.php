@@ -18,12 +18,12 @@ class VigenereController extends Controller
         $plaintext = strtoupper($request->input('plaintext'));
         $keyInput = strtoupper($request->input('key'));
 
-        // Konversi angka dalam key ke huruf
-        // Contoh: r28 → RCI
+        // ganti angka neng huruf
+        // Contohe: r28 → RCI
         $keyConverted = '';
-        for ($i = 0; $i < strlen($keyInput); $i++) {
-            $char = $keyInput[$i];
-            if (ctype_digit($char)) {
+        for ($i = 0; $i < strlen($keyInput); $i++) { //perulangan sampai karakter terakir
+            $char = $keyInput[$i];//Mengambil satu karakter dari keyInput
+            if (ctype_digit($char)) {//cek apakah angka atau huruf jika angka dikonversi ke huruf dan jika hruruf tetap huruf
                 $digit = intval($char);
                 $keyConverted .= chr(65 + $digit); // 1=B, 2=C, 8=I, dst
             } else {

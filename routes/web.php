@@ -78,3 +78,13 @@ Route::post('/dekripsi/berlapis', [DekripsiBerlapisController::class, 'decrypt']
 
 Route::get('/enkripsi/berlapis', [EnkripsiBerlapisController::class, 'index'])->name('enkripsi.berlapis');
 Route::post('/enkripsi/berlapis', [EnkripsiBerlapisController::class, 'encrypt'])->name('enkripsi.berlapis.proses');
+
+use App\Http\Controllers\EnkripsiBertahapController;
+
+Route::get('/enkripsibertahap', [EnkripsiBertahapController::class, 'index'])->name('enkripsibertahap.index');
+Route::post('/enkripsibertahap', [EnkripsiBertahapController::class, 'encrypt'])->name('enkripsibertahap.encrypt');
+
+use App\Http\Controllers\DekripsiBertahapController;
+
+Route::get('/dekripsibertahap', [DekripsiBertahapController::class, 'index'])->name('dekripsibertahap.index');
+Route::post('/dekripsibertahap', [DekripsiBertahapController::class, 'decrypt'])->name('dekripsibertahap.decrypt');
