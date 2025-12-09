@@ -58,40 +58,48 @@ class EnkripsiBertahapController extends Controller
     }
 
     // 🔹 Enkripsi Vigenère Auto-key
-    private function vigenereEncrypt($plaintext, $key)
-    {
-        $plaintext = strtoupper($plaintext);
-        $keyInput = strtoupper($key);
+ private function vigenereEncrypt($plaintext, $key)
+{
+    $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $key = strtoupper($this->convertNumericKey($key));
 
-        $keyConverted = $this->convertNumericKey($keyInput);
+    $autoKey = $key;
+    $cleanPlain = strtoupper(preg_replace('/[^A-Za-z]/', '', $plaintext));
 
-        $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $mod = strlen($alphabet);
+    $i = 0;
+    while (strlen($autoKey) < strlen($cleanPlain)) {
+        $autoKey .= $cleanPlain[$i++];
+    }
 
-        $autoKey = $keyConverted;
-        $i = 0;
-        while (strlen($autoKey) < strlen($plaintext)) {
-            $autoKey .= $plaintext[$i];
-            $i++;
-        }
+    $ciphertext = '';
+    $j = 0;
 
-        $ciphertext = '';
-        for ($j = 0; $j < strlen($plaintext); $j++) {
-            $p = $plaintext[$j];
-            $k = $autoKey[$j];
+    for ($i = 0; $i < strlen($plaintext); $i++) {
+        $ch = $plaintext[$i];
+
+        if (ctype_alpha($ch)) {
+            // Plain index
+            $p = strtoupper($ch);
             $pIndex = strpos($alphabet, $p);
+
+            // Key index
+            $k = $autoKey[$j++];
             $kIndex = strpos($alphabet, $k);
 
-            if ($pIndex !== false && $kIndex !== false) {
-                $cIndex = ($pIndex + $kIndex) % $mod;
-                $ciphertext .= $alphabet[$cIndex];
-            } else {
-                $ciphertext .= $p;
-            }
-        }
+            // Encrypt
+            $cIndex = ($pIndex + $kIndex) % 26;
+            $c = $alphabet[$cIndex];
 
-        return [$ciphertext, $keyConverted, $autoKey];
+            // Kembalikan case asli
+            $ciphertext .= ctype_lower($ch) ? strtolower($c) : $c;
+        } else {
+            $ciphertext .= $ch; // simbol, angka, spasi tetap
+        }
     }
+
+    return [$ciphertext, $key, $autoKey];
+}
+
 
     // 🔹 Enkripsi AES
     private function aesEncrypt($plaintext, $key)

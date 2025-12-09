@@ -3,132 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <title>Caesar Cipher</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
     body {
-      background:#0f172a;
-      font-family: Arial, sans-serif;
-      color:#e6eef8;
-      display:flex;
-      justify-content:center;
-      padding:40px;
+      background: linear-gradient(135deg, #09101c, #0e7490);
+      min-height: 100vh;
+      color: #e6eef8;
+      padding-top: 80px;
     }
 
-    .card {
-      background:#0b1220;
-      padding:30px;
-      border-radius:12px;
-      width:500px;
-      position:relative;
+    .glass-card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 35px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.35);
     }
 
-    h1 {
-      text-align:center;
-      color:#34d399;
-      margin-bottom:20px;
+    label {
+      font-weight: 600;
+      margin-top: 10px;
     }
 
-    label { 
-      font-weight:bold; 
-      margin-top:10px; 
-      display:block; 
+      textarea, input {
+          background: rgba(255,255,255,0.08) !important;
+          border: 1px solid rgba(255,255,255,0.15) !important;
+          color: #e6eef8 !important;
+      }
+
+      textarea[readonly], input[readonly] {
+          background: rgba(255,255,255,0.15) !important;
+          color: #bcd0e6 !important;
+      }
+
+    .btn-glow {
+      background: #22d3ee;
+      color: #000;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 12px;
+      width: 100%;
+      box-shadow: 0 0 12px rgba(34,211,238,0.55);
+      border: none;
     }
 
-    textarea, input {
-      width:100%;
-      padding:10px;
-      margin-top:5px;
-      border-radius:8px;
-      border:none;
-      background:#1e293b;
-      color:#e6eef8;
-    }
-
-    input[readonly], textarea[readonly] {
-      background:#334155;
-      color:#94a3b8;
-    }
-
-    button {
-      margin-top:15px;
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:8px;
-      background:#34d399;
-      color:#000;
-      font-weight:bold;
-      cursor:pointer;
-      transition:0.3s;
-    }
-
-    button:hover {
-      background:#22c55e;
+    .btn-glow:hover {
+      background: #0ea5e9;
+      color: #000;
     }
 
     .btn-copy {
-      margin-top:8px;
-      background:#22c55e;
-      font-size:14px;
-      padding:6px 12px;
-      border:none;
-      border-radius:6px;
-      cursor:pointer;
-      width:auto;
+      background: #0ea5e9;
+      color: #fff;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 8px;
     }
 
-    .btn-copy:hover { background:#16a34a; }
+    .btn-copy:hover {
+      background: #0284c7;
+    }
 
     .btn-next {
-      margin-top:12px;
-      background:#3b82f6;
-      color:#fff;
-      font-weight:bold;
+      margin-top: 12px;
+      background: #38bdf8;
+      color: #000;
+      font-weight: bold;
+      border-radius: 10px;
+      padding: 10px;
+      width: 100%;
+      border: none;
     }
 
     .btn-next:disabled {
       background:#475569;
       cursor:not-allowed;
-    }
-
-    .error {
-      color:#f87171;
-      margin-top:5px;
-      font-size:14px;
+      color: #cbd5e1;
     }
 
     .note {
-      margin-top:12px;
-      font-size:14px;
-      color:#94a3b8;
-      text-align:center;
-      line-height:1.5;
+      margin-top: 15px;
+      color: #cbd5e1;
+      font-size: 14px;
+      text-align: center;
     }
 
-    /* 🔹 Tombol navigasi di pojok kiri atas */
+    /* Tombol Navigasi */
     .nav-buttons {
-      position:fixed;
-      top:20px;
-      left:20px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 999;
     }
 
     .nav-btn {
-      background:#1e293b;
-      color:#34d399;
-      border:2px solid #34d399;
-      padding:8px 14px;
-      border-radius:8px;
-      font-weight:bold;
-      text-decoration:none;
-      text-align:center;
-      transition:0.3s;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid #22d3ee;
+      color: #22d3ee;
+      padding: 8px 14px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      backdrop-filter: blur(6px);
     }
 
     .nav-btn:hover {
-      background:#34d399;
-      color:#0f172a;
+      background: #22d3ee;
+      color: #000;
     }
   </style>
 
@@ -138,57 +128,72 @@
       copyText.select();
       copyText.setSelectionRange(0, 99999);
       document.execCommand("copy");
+
       alert("✅ Hasil enkripsi Caesar berhasil disalin!");
       document.getElementById("nextBtn").disabled = false;
     }
   </script>
+
 </head>
 <body>
 
-  <!-- 🔹 Tombol Navigasi -->
+  <!-- NAVIGATION BUTTONS -->
   <div class="nav-buttons">
     <a href="{{ url('/enkripsi') }}" class="nav-btn">← Halaman Enkripsi</a>
     <a href="{{ url('/dekripsi/caesar') }}" class="nav-btn">🔓 Dekripsi Caesar</a>
   </div>
 
-  <div class="card">
-    <h1>Caesar Cipher</h1>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
 
-    <form method="POST" action="{{ route('caesar.encrypt') }}">
-      @csrf
+        <div class="glass-card">
 
-      <label for="plaintext">Plaintext</label>
-      <textarea name="plaintext" id="plaintext" rows="4">{{ old('plaintext') }}</textarea>
-      @error('plaintext')
-        <div class="error">{{ $message }}</div>
-      @enderror
+          <h2 class="fw-bold text-center mb-3" style="color:#22d3ee;">
+            🔐 Caesar Cipher
+          </h2>
 
-      <label for="key">Key</label>
-      <input type="text" name="key" id="key" value="{{ old('key') }}">
-      @error('key')
-        <div class="error">{{ $message }}</div>
-      @enderror
+          <form method="POST" action="{{ route('caesar.encrypt') }}">
+            @csrf
 
-      <button type="submit">Encrypt</button>
-    </form>
+            <label for="plaintext">Plaintext</label>
+            <textarea name="plaintext" id="plaintext" rows="4" class="form-control">{{ old('plaintext') }}</textarea>
+            @error('plaintext')
+              <div class="text-danger small">{{ $message }}</div>
+            @enderror
 
-    @isset($ciphertext)
-      <label for="ciphertext">Hasil Enkripsi</label>
-      <input type="text" id="ciphertext" value="{{ $ciphertext }}" readonly>
-      <button type="button" class="btn-copy" onclick="copyToClipboard()">Copy</button>
+            <label for="key">Key</label>
+            <input type="text" name="key" id="key" class="form-control" value="{{ old('key') }}">
+            @error('key')
+              <div class="text-danger small">{{ $message }}</div>
+            @enderror
 
-      <form action="{{ url('/aes') }}" method="GET">
-        <button type="submit" id="nextBtn" class="btn-next" disabled>Lanjut ke AES</button>
-      </form>
+            <button type="submit" class="btn-glow mt-3">Encrypt</button>
+          </form>
 
-      <p class="note">
-        Tahap kedua enkripsi dengan metode <strong>Caesar Cipher</strong> telah selesai.<br>
-        Selanjutnya, teks ini akan dienkripsi kembali menggunakan <strong>AES</strong> sebagai tahap ketiga dari proses enkripsi berantai.
-      </p>
-      <p class="note">
-        ⚡ <strong>Catatan:</strong> Salin hasil enkripsi untuk dijadikan plaintext pada tahap selanjutnya.
-      </p>
-    @endisset
+          @isset($ciphertext)
+            <label for="ciphertext" class="mt-3">Hasil Enkripsi</label>
+            <input type="text" id="ciphertext" class="form-control" value="{{ $ciphertext }}" readonly>
+
+            <button type="button" class="btn-copy" onclick="copyToClipboard()">
+              📋 Copy
+            </button>
+
+            <form action="{{ url('/aes') }}" method="GET">
+              <button type="submit" id="nextBtn" class="btn-next" disabled>
+                Lanjut ke AES →
+              </button>
+            </form>
+
+            <p class="note mt-3">
+              Tahap enkripsi Caesar selesai. Lanjutkan dengan AES untuk tahap berikutnya.
+            </p>
+          @endisset
+
+        </div>
+
+      </div>
+    </div>
   </div>
 
 </body>

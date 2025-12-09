@@ -2,144 +2,146 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Halaman Enkripsi</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
-    body {
-      background: #0f172a;
-      font-family: Arial, sans-serif;
-      color: #e6eef8;
-      margin: 0;
-      padding: 40px;
-      display: flex;
-      justify-content: center;
-    }
+      body {
+          background: linear-gradient(135deg, #09101c, #0e7490);
+          min-height: 100vh;
+          color: #e6eef8;
+      }
 
-    .container {
-      max-width: 900px;
-      width: 100%;
-    }
+      .glass-card {
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 18px;
+          padding: 35px;
+          box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+      }
 
-    h1 {
-      text-align: center;
-      color: #34d399;
-      margin-bottom: 10px;
-    }
+      .menu-card {
+          background: rgba(255,255,255,0.08);
+          backdrop-filter: blur(6px);
+          padding: 25px;
+          border-radius: 14px;
+          border: 1px solid rgba(255,255,255,0.1);
+          transition: 0.3s;
+          text-align: center;
+      }
 
-    p {
-      text-align: center;
-      color: #94a3b8;
-      margin-bottom: 30px;
-    }
+      .menu-card:hover {
+          transform: translateY(-6px);
+          background: rgba(255,255,255,0.15);
+      }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
+      .menu-title {
+          color: #22d3ee;
+          font-weight: bold;
+          margin-bottom: 8px;
+      }
 
-    .card {
-      background: #0b1220;
-      padding: 25px;
-      border-radius: 12px;
-      text-align: center;
-      transition: 0.3s;
-    }
+      .btn-glow {
+          background: #22d3ee;
+          color: #000;
+          font-weight: 600;
+          border-radius: 10px;
+          padding: 10px 18px;
+          box-shadow: 0 0 12px rgba(34,211,238,0.55);
+          text-decoration: none;
+      }
 
-    .card:hover {
-      background: #1e293b;
-      transform: translateY(-4px);
-    }
+      .btn-glow:hover {
+          background: #0ea5e9;
+          color: #000;
+      }
 
-    .card h2 {
-      color: #34d399;
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      font-size: 14px;
-      color: #94a3b8;
-      margin-bottom: 20px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      background: #34d399;
-      color: #000;
-      font-weight: bold;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      background: #22c55e;
-    }
-
-    /* Tombol kembali ke halaman utama */
-    .back-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: #1e293b;
-      color: #34d399;
-      border: 2px solid #34d399;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .back-btn:hover {
-      background: #34d399;
-      color: #0f172a;
-    }
   </style>
 </head>
+
 <body>
 
-  <!-- Tombol Kembali -->
-  <a href="{{ url('/') }}" class="back-btn">← Kembali</a>
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark px-4" 
+     style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+  <a class="navbar-brand fw-bold" href="/">
+    <i class="bi bi-shield-lock"></i> EnkripsiApp
+  </a>
+</nav>
 
-  <div class="container">
-    <h1>Halaman Enkripsi</h1>
-    <p>Pilih salah satu metode enkripsi berikut untuk memulai:</p>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
 
-    <div class="cards">
+      <div class="glass-card">
 
-     <div class="card">
-        <h2>EnkripsiBerlapis</h2>
-        <p>Enkripsi teks dengan metode substitusi berbasis kata kunci.</p>
-        <a href="{{ url('/enkripsibertahap') }}" class="btn">Gunakan</a>
+        <h2 class="fw-bold text-center mb-2">
+          🔐 Halaman Enkripsi
+        </h2>
+
+        <p class="text-center mb-4 text-light">
+          Pilih salah satu metode enkripsi untuk memulai proses.
+        </p>
+
+        <div class="row g-3">
+
+          <!-- ENKRIPSI BERTAHAP -->
+          <div class="col-md-6">
+            <div class="menu-card">
+              <h5 class="menu-title">Enkripsi Bertahap</h5>
+              <p class="small text-light">Proses RC4 → AES → Caesar → Vigenère.</p>
+              <a href="{{ url('/enkripsibertahap') }}" class="btn-glow">Gunakan</a>
+            </div>
+          </div>
+
+          <!-- VIGENERE -->
+          <div class="col-md-6">
+            <div class="menu-card">
+              <h5 class="menu-title">Vigenère Cipher</h5>
+              <p class="small text-light">Enkripsi dengan kata kunci berulang.</p>
+              <a href="{{ url('/vigenere') }}" class="btn-glow">Gunakan</a>
+            </div>
+          </div>
+
+          <!-- CAESAR -->
+          <div class="col-md-6">
+            <div class="menu-card">
+              <h5 class="menu-title">Caesar Cipher</h5>
+              <p class="small text-light">Enkripsi klasik dengan pergeseran huruf.</p>
+              <a href="{{ url('/caesar') }}" class="btn-glow">Gunakan</a>
+            </div>
+          </div>
+
+          <!-- AES -->
+          <div class="col-md-6">
+            <div class="menu-card">
+              <h5 class="menu-title">AES</h5>
+              <p class="small text-light">Advanced Encryption Standard modern.</p>
+              <a href="{{ url('/aes') }}" class="btn-glow">Gunakan</a>
+            </div>
+          </div>
+
+          <!-- RC4 -->
+          <div class="col-md-6">
+            <div class="menu-card">
+              <h5 class="menu-title">RC4</h5>
+              <p class="small text-light">Stream cipher cepat dan ringan.</p>
+              <a href="{{ url('/rc4') }}" class="btn-glow">Gunakan</a>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-     
-      <div class="card">
-        <h2>Vigenère Cipher</h2>
-        <p>Enkripsi teks dengan metode substitusi berbasis kata kunci.</p>
-        <a href="{{ url('/vigenere') }}" class="btn">Gunakan</a>
-      </div>
-
-      <div class="card">
-        <h2>Caesar Cipher</h2>
-        <p>Enkripsi klasik dengan pergeseran huruf sederhana.</p>
-        <a href="{{ url('/caesar') }}" class="btn">Gunakan</a>
-      </div>
-
-      <div class="card">
-        <h2>AES</h2>
-        <p>Advanced Encryption Standard untuk enkripsi modern.</p>
-        <a href="{{ url('/aes') }}" class="btn">Gunakan</a>
-      </div>
-
-      <div class="card">
-        <h2>RC4</h2>
-        <p>Stream cipher ringan untuk enkripsi cepat.</p>
-        <a href="{{ url('/rc4') }}" class="btn">Gunakan</a>
-      </div>
     </div>
   </div>
+</div>
+
 </body>
 </html>

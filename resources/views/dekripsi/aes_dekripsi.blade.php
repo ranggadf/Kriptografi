@@ -1,224 +1,171 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>AES Cipher - Dekripsi</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
-    body {
-      background: #0f172a;
-      font-family: Arial, sans-serif;
-      color: #e6eef8;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
-    }
-
-    .card {
-      background: #0b1220;
-      padding: 30px;
-      border-radius: 12px;
-      width: 520px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #34d399;
-      margin-bottom: 20px;
-    }
-
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-
-    textarea, input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 8px;
-      border: none;
-      background: #1e293b;
-      color: #e6eef8;
-      resize: none;
-    }
-
-    textarea[readonly], input[readonly] {
-      background: #334155;
-      color: #94a3b8;
-    }
-
-    button {
-      margin-top: 15px;
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #34d399;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background: #22c55e;
-    }
-
-    .btn-copy {
-      margin-top: 8px;
-      background: #22c55e;
-      font-size: 14px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      width: auto;
-      font-weight: bold;
-    }
-
-    .btn-copy:hover {
-      background: #16a34a;
-    }
-
-    .error {
-      color: #f87171;
-      margin-top: 5px;
-      font-size: 14px;
-    }
-
-    .note {
-      margin-top: 15px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #cbd5e1;
-      background: #1e293b;
-      padding: 10px;
-      border-radius: 8px;
-    }
-
-    .note strong {
-      color: #34d399;
-    }
-
-    /* Navigasi kiri */
-    .nav-buttons {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .nav-btn {
-      background: #1e293b;
-      color: #34d399;
-      border: 2px solid #34d399;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-decoration: none;
-      width: 200px;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .nav-btn:hover {
-      background: #34d399;
-      color: #0f172a;
-    }
-
-    /* Tombol bawah (ke Caesar) */
-    .btn-next {
-      margin-top: 15px;
-      background: #3b82f6;
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
-      width: 100%;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn-next:hover {
-      background: #2563eb;
-    }
-
-    .btn-next:disabled {
-      background: #475569;
-      cursor: not-allowed;
-    }
-  </style>
-
-  <script>
-    function copyToClipboard() {
-      const copyText = document.getElementById("plaintext");
-      if (!copyText) return;
-
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-
-      // Aktifkan tombol lanjut ke Caesar
-      const nextBtn = document.getElementById("nextBtn");
-      if (nextBtn) {
-        nextBtn.disabled = false;
+      body {
+          background: linear-gradient(135deg, #09101c, #0e7490);
+          min-height: 100vh;
+          color: #e6eef8;
       }
 
-      alert("✅ Hasil dekripsi AES berhasil disalin!\nSekarang Anda bisa lanjut ke dekripsi Caesar Cipher.");
-    }
-  </script>
+      .glass-card {
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 18px;
+          padding: 35px;
+          box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+      }
+
+      .btn-glow {
+          background: #22d3ee;
+          color: #000;
+          font-weight: 600;
+          border-radius: 10px;
+          padding: 10px 18px;
+          box-shadow: 0 0 12px rgba(34,211,238,0.55);
+          text-decoration: none;
+      }
+
+      .btn-glow:hover {
+          background: #0ea5e9;
+          color: #000;
+      }
+
+      .top-buttons a {
+          background: rgba(255,255,255,0.1);
+          backdrop-filter: blur(6px);
+          padding: 8px 14px;
+          border-radius: 10px;
+          font-weight: 600;
+          border: 1px solid rgba(255,255,255,0.2);
+          color: #22d3ee;
+          transition: 0.3s;
+          text-decoration: none;
+      }
+
+      .top-buttons a:hover {
+          background: rgba(255,255,255,0.25);
+          color: #000;
+      }
+
+      textarea, input {
+          background: rgba(255,255,255,0.08) !important;
+          border: 1px solid rgba(255,255,255,0.15) !important;
+          color: #e6eef8 !important;
+      }
+
+      textarea[readonly], input[readonly] {
+          background: rgba(255,255,255,0.15) !important;
+          color: #bcd0e6 !important;
+      }
+
+      .copy-btn {
+          background: #22c55e;
+          border: none;
+          padding: 8px 12px;
+          border-radius: 8px;
+          color: #000;
+          font-weight: bold;
+      }
+
+      .copy-btn:hover { background: #16a34a; }
+  </style>
 </head>
+
 <body>
 
-  <!-- Tombol navigasi -->
-  <div class="nav-buttons">
-    <a href="{{ url('/aes') }}" class="nav-btn">← Kembali ke Enkripsi AES</a>
-    <a href="{{ url('/dekripsi') }}" class="nav-btn">🏠 Halaman Dekripsi</a>
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark px-4 mb-4"
+     style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+  <a class="navbar-brand fw-bold" href="/">
+    <i class="bi bi-box-arrow-in-down"></i> AES Dekripsi
+  </a>
+</nav>
+
+<!-- TOP BUTTONS -->
+<div class="top-buttons d-flex gap-2 ms-4 mb-3">
+    <a href="{{ url('/aes') }}">← Enkripsi AES</a>
+    <a href="{{ url('/dekripsi') }}">🏠 Halaman Dekripsi</a>
+</div>
+
+<div class="container mt-3 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+
+      <div class="glass-card">
+
+        <h2 class="fw-bold text-center mb-2">🔓 AES Cipher - Dekripsi</h2>
+        <p class="text-center mb-4 text-light">
+          Masukkan ciphertext serta key untuk mendekripsi data AES.
+        </p>
+
+        @if($errors->any())
+          <div class="text-danger mb-2">{{ $errors->first() }}</div>
+        @endif
+
+        <!-- FORM -->
+        <form method="POST" action="{{ route('aes.decrypt') }}">
+          @csrf
+
+          <label class="fw-bold mb-1">CIPHERTEXT (Base64)</label>
+          <textarea name="ciphertext" rows="3" class="form-control mb-3" required>{{ old('ciphertext') }}</textarea>
+
+          <label class="fw-bold mb-1">KEY</label>
+          <input type="text" name="key" class="form-control mb-4" value="{{ old('key') }}" required>
+
+          <button class="btn-glow w-100" type="submit">Dekripsi</button>
+        </form>
+
+        @if(session('plaintext'))
+        <div class="mt-4">
+
+          <label class="fw-bold mb-1">HASIL DEKRIPSI</label>
+          <textarea id="plaintext" rows="3" class="form-control" readonly>{{ session('plaintext') }}</textarea>
+
+          <button id="copyBtn" class="copy-btn mt-2">Copy</button>
+
+          <p class="text-center text-light mt-3 small">
+            Silakan salin hasil ini untuk melanjutkan ke tahap berikutnya: <strong>Caesar Cipher</strong>.
+          </p>
+
+          <a href="{{ url('/dekripsi/caesar') }}" id="nextBtn"
+             class="btn btn-primary w-100 mt-2 disabled">
+            Lanjut ke Dekripsi Caesar →
+          </a>
+        </div>
+        @endif
+
+      </div>
+
+    </div>
   </div>
+</div>
 
-  <div class="card">
-    <h1>AES Cipher - Dekripsi</h1>
+<script>
+  const copyBtn = document.getElementById("copyBtn");
+  const plaintextEl = document.getElementById("plaintext");
+  const nextBtn = document.getElementById("nextBtn");
 
-    @if($errors->any())
-      <div class="error">{{ $errors->first() }}</div>
-    @endif
-
-    <form method="POST" action="{{ route('aes.decrypt') }}">
-      @csrf
-
-      <label for="ciphertext">Ciphertext (Base64)</label>
-      <textarea name="ciphertext" id="ciphertext" rows="4" required>{{ old('ciphertext') }}</textarea>
-
-      <label for="key">Key</label>
-      <input type="text" name="key" id="key" value="{{ old('key') }}" required>
-
-      <button type="submit">🔓 Decrypt</button>
-    </form>
-
-    @if(session('plaintext'))
-      <label for="plaintext">Hasil Dekripsi</label>
-      <textarea id="plaintext" readonly rows="4">{{ session('plaintext') }}</textarea>
-
-      <button type="button" class="btn-copy" onclick="copyToClipboard()">📋 Copy</button>
-
-      <p class="note">
-        ✅ Ini adalah hasil akhir dari <strong>dekripsi AES</strong>.<br>
-        Silakan salin hasil ini terlebih dahulu sebelum melanjutkan ke tahap berikutnya:
-        <strong>Caesar Cipher</strong>.
-      </p>
-
-      <!-- Tombol lanjut ke Caesar -->
-      <form action="{{ url('/dekripsi/caesar') }}" method="GET">
-        <button type="submit" id="nextBtn" class="btn-next" disabled>
-          ➡️ Lanjut ke Dekripsi Caesar
-        </button>
-      </form>
-    @endif
-  </div>
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(plaintextEl.value).then(() => {
+        copyBtn.textContent = "Copied!";
+        nextBtn.classList.remove("disabled");
+        setTimeout(() => (copyBtn.textContent = "Copy"), 2000);
+      });
+    });
+  }
+</script>
 
 </body>
 </html>

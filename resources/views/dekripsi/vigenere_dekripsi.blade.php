@@ -2,188 +2,174 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Dekripsi Vigenère Cipher (Tahap Akhir)</title>
+
+  <!-- BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
-    body {
-      background: #0f172a;
-      font-family: Arial, sans-serif;
-      color: #e6eef8;
-      margin: 0;
-      padding: 40px;
-      display: flex;
-      justify-content: center;
-    }
+      body {
+          background: linear-gradient(135deg, #09101c, #0e7490);
+          min-height: 100vh;
+          color: #e6eef8;
+      }
 
-    .container {
-      max-width: 700px;
-      width: 100%;
-      background: #0b1220;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
+      .glass-card {
+          background: rgba(255,255,255,0.06);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,0.15);
+          border-radius: 18px;
+          padding: 35px;
+          box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+      }
 
-    h1 {
-      text-align: center;
-      color: #34d399;
-      margin-bottom: 10px;
-    }
+.nav-floating {
+    position: fixed;
+    top: 90px; /* ⬅️ Biar tidak menutupi navbar */
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 999; /* opsional biar tetap muncul di atas */
+}
 
-    p.subtitle {
-      text-align: center;
-      color: #94a3b8;
-      font-size: 14px;
-      margin-bottom: 25px;
-    }
+      .nav-btn {
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.2);
+          padding: 10px 16px;
+          border-radius: 12px;
+          color: #22d3ee;
+          font-weight: 600;
+          text-decoration: none;
+          backdrop-filter: blur(6px);
+          transition: 0.3s;
+      }
+      .nav-btn:hover {
+          background: rgba(255,255,255,0.2);
+          color: #000;
+      }
 
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
+      textarea, input {
+          background: rgba(255,255,255,0.1) !important;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          color: #e6eef8 !important;
+      }
 
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border: 2px solid transparent;
-      border-radius: 8px;
-      background: #1e293b;
-      color: #e6eef8;
-      transition: border-color 0.3s;
-    }
+      .btn-glow {
+          background: #22d3ee;
+          color: #000;
+          border-radius: 10px;
+          padding: 12px;
+          font-weight: bold;
+          box-shadow: 0 0 14px rgba(34,211,238,0.45);
+          width: 100%;
+      }
+      .btn-glow:hover {
+          background: #0ea5e9;
+          color: #000;
+      }
 
-    .btn {
-      margin-top: 20px;
-      display: inline-block;
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #34d399;
-      color: #000;
-      font-weight: bold;
-      text-decoration: none;
-      cursor: pointer;
-    }
+      .note-box {
+          background: rgba(255,255,255,0.12);
+          border-left: 4px solid #22d3ee;
+          padding: 14px;
+          border-radius: 10px;
+          color: #c7dfff;
+          font-size: 14px;
+      }
 
-    .btn:hover {
-      background: #22c55e;
-    }
+      .result-box {
+          background: rgba(255,255,255,0.12);
+          padding: 16px;
+          border-radius: 12px;
+          font-size: 15px;
+      }
 
-    .result {
-      margin-top: 25px;
-      background: #1e293b;
-      padding: 15px;
-      border-radius: 8px;
-      word-wrap: break-word;
-    }
-
-    .back-link {
-      display: inline-block;
-      margin-top: 15px;
-      color: #94a3b8;
-      text-decoration: none;
-    }
-
-    .back-link:hover {
-      color: #34d399;
-    }
-
-    .nav-buttons {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .nav-btn {
-      background: #1e293b;
-      color: #34d399;
-      border: 2px solid #34d399;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-decoration: none;
-      width: 180px;
-      text-align: center;
-    }
-
-    .nav-btn:hover {
-      background: #34d399;
-      color: #0f172a;
-    }
-
-    .note-box {
-      background: #1e293b;
-      padding: 12px;
-      border-left: 4px solid #34d399;
-      border-radius: 6px;
-      color: #a5b4fc;
-      margin-bottom: 25px;
-      font-size: 14px;
-    }
   </style>
 </head>
+
 <body>
 
-  <div class="nav-buttons">
-    <a href="{{ url('/dekripsi') }}" class="nav-btn">← Kembali ke Menu Dekripsi</a>
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark px-4 mb-4"
+     style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+  <a class="navbar-brand fw-bold" href="/">
+    <i class="bi bi-shield-lock"></i> EnkripsiApp
+  </a>
+</nav>
+
+<div class="nav-floating">
+    <a href="{{ url('/dekripsi') }}" class="nav-btn">← Menu Dekripsi</a>
     <a href="{{ url('/') }}" class="nav-btn">🏠 Halaman Utama</a>
-  </div>
+</div>
 
-  <div class="container">
-    <h1>Dekripsi Vigenère Cipher</h1>
-    <p class="subtitle">Tahap ke-4 (Terakhir) dari proses dekripsi berlapis</p>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
 
-    <div class="note-box">
-      <strong>📘 Catatan:</strong> Tahap ini merupakan <b>tahap terakhir</b> setelah melalui
-      proses dekripsi <b>RC4 → AES → Caesar Cipher</b>.  
-      Pastikan teks yang dimasukkan berasal dari hasil tahap <b>Caesar Cipher</b>.
-    </div>
+      <div class="glass-card">
 
-    <form action="{{ route('vigenere.decrypt') }}" method="POST">
-      @csrf
-      <label for="ciphertext">Ciphertext</label>
-      <textarea id="ciphertext" name="ciphertext" rows="4" required>{{ old('ciphertext', $ciphertext ?? '') }}</textarea>
+        <h2 class="fw-bold text-center mb-2">🔓 Dekripsi Vigenère Cipher</h2>
+        <p class="text-center mb-4 text-light">Tahap ke-4 (Terakhir) dari proses dekripsi berlapis</p>
 
-      <label for="key">Key (Kata Kunci)</label>
-      <input type="text" id="key" name="key" value="{{ old('key', $key ?? '') }}" required>
+        <div class="note-box mb-4">
+          <strong>📘 Catatan:</strong> Ini adalah tahap terakhir setelah dekripsi  
+          <b>RC4 → AES → Caesar Cipher</b>.  
+          Pastikan ciphertext berasal dari hasil *Caesar Cipher* sebelumnya.
+        </div>
 
-      <button type="submit" class="btn">Dekripsi Sekarang</button>
-    </form>
+        <!-- FORM -->
+        <form action="{{ route('vigenere.decrypt') }}" method="POST">
+          @csrf
 
-    @isset($plaintext)
-      <div class="result">
-        <strong>🔓 Hasil Dekripsi Akhir:</strong><br>
-        {{ $plaintext }}
+          <label class="fw-bold mb-1">Ciphertext</label>
+          <textarea class="form-control mb-3" id="ciphertext" name="ciphertext"
+                    rows="4" required>{{ old('ciphertext', $ciphertext ?? '') }}</textarea>
+
+          <label class="fw-bold mb-1">Key</label>
+          <input type="text" class="form-control mb-3" id="key" name="key"
+                 value="{{ old('key', $key ?? '') }}" required>
+
+          <button type="submit" class="btn-glow">Dekripsi Sekarang</button>
+        </form>
+
+        @isset($plaintext)
+        <div class="result-box mt-4">
+          <strong>🔓 Hasil Dekripsi Final:</strong><br>
+          {{ $plaintext }}
+        </div>
+        @endisset
+
+        <div class="text-center mt-3">
+          <a href="{{ url('/') }}" class="text-light text-decoration-none">
+            ← Kembali ke Halaman Utama
+          </a>
+        </div>
+
       </div>
-    @endisset
 
-    <a href="{{ url('/') }}" class="back-link">← Kembali ke Halaman Utama</a>
+    </div>
   </div>
+</div>
 
-  <!-- ✅ Validasi panjang key -->
-  <script>
+<!-- LIMIT KEY LENGTH -->
+<script>
 document.addEventListener("DOMContentLoaded", function () {
-  const ciphertextInput = document.getElementById("ciphertext");
+  const cipherInput = document.getElementById("ciphertext");
   const keyInput = document.getElementById("key");
 
-  // Fungsi membatasi panjang key sesuai panjang ciphertext
-  function limitKeyLength() {
-    const maxLength = ciphertextInput.value.trim().length;
-    if (keyInput.value.length > maxLength) {
-      keyInput.value = keyInput.value.slice(0, maxLength);
+  function limitKey() {
+    const max = cipherInput.value.trim().length;
+    if (keyInput.value.length > max) {
+      keyInput.value = keyInput.value.slice(0, max);
     }
   }
 
-  // Saat user mengetik key
-  keyInput.addEventListener("input", limitKeyLength);
-
-  // Opsional: juga batasi saat user mengubah ciphertext
-  ciphertextInput.addEventListener("input", limitKeyLength);
+  keyInput.addEventListener("input", limitKey);
+  cipherInput.addEventListener("input", limitKey);
 });
 </script>
 
