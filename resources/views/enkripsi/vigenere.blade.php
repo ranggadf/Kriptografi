@@ -2,138 +2,185 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Kriptografi - Vigenère (Huruf + Angka)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Vigenère (Huruf + Angka)</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
-    body {
-      background: #0f172a;
-      font-family: Arial, sans-serif;
-      color: #e6eef8;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
-    }
-    .card {
-      background: #0b1220;
-      padding: 30px;
-      border-radius: 12px;
-      width: 500px;
-    }
-    h1 { text-align: center; color: #34d399; margin-bottom: 20px; }
-    label { font-weight: bold; margin-top: 10px; display: block; }
-    textarea, input {
-      width: 100%; padding: 10px; margin-top: 5px;
-      border-radius: 8px; border: none;
-      background: #1e293b; color: #e6eef8;
-    }
-    input[readonly], textarea[readonly] { background: #334155; color: #94a3b8; }
-    button {
-      margin-top: 15px; width: 100%; padding: 12px;
-      border: none; border-radius: 8px;
-      background: #34d399; color: #000;
-      font-weight: bold; cursor: pointer;
-    }
-    .btn-copy { margin-top: 8px; background: #22c55e; font-size: 14px; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; }
-    .btn-copy:hover { background: #16a34a; }
-    .btn-next { margin-top: 12px; background: #3b82f6; }
-    .note { margin-top: 10px; font-size: 14px; color: #94a3b8; text-align: center; }
-    .top-buttons {
-      position: fixed; top: 20px; left: 20px;
-      display: flex; gap: 10px;
-    }
-    .nav-btn {
-      background: #1e293b; color: #34d399; border: 2px solid #34d399;
-      padding: 8px 14px; border-radius: 8px;
-      font-weight: bold; text-decoration: none; transition: 0.3s;
-    }
-    .nav-btn:hover { background: #34d399; color: #0f172a; }
+      body {
+          background: linear-gradient(135deg, #09101c, #0e7490);
+          min-height: 100vh;
+          color: #e6eef8;
+      }
+
+      .glass-card {
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 18px;
+          padding: 35px;
+          box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+      }
+
+      .btn-glow {
+          background: #22d3ee;
+          color: #000;
+          font-weight: 600;
+          border-radius: 10px;
+          padding: 10px 18px;
+          box-shadow: 0 0 12px rgba(34,211,238,0.55);
+          text-decoration: none;
+      }
+
+      .btn-glow:hover {
+          background: #0ea5e9;
+          color: #000;
+      }
+
+      .top-buttons a {
+          background: rgba(255,255,255,0.1);
+          backdrop-filter: blur(6px);
+          padding: 8px 14px;
+          border-radius: 10px;
+          font-weight: 600;
+          border: 1px solid rgba(255,255,255,0.2);
+          color: #22d3ee;
+          transition: 0.3s;
+          text-decoration: none;
+      }
+
+      .top-buttons a:hover {
+          background: rgba(255,255,255,0.25);
+          color: #000;
+      }
+
+      textarea, input {
+          background: rgba(255,255,255,0.08) !important;
+          border: 1px solid rgba(255,255,255,0.15) !important;
+          color: #e6eef8 !important;
+      }
+      textarea[readonly], input[readonly] {
+          background: rgba(255,255,255,0.15) !important;
+          color: #bcd0e6 !important;
+      }
+
+      .copy-btn {
+          background: #22c55e;
+          border: none;
+          padding: 8px 12px;
+          border-radius: 8px;
+          color: #000;
+          font-weight: bold;
+      }
+      .copy-btn:hover { background: #16a34a; }
+
   </style>
 </head>
+
 <body>
-  <!-- Tombol Navigasi -->
-  <div class="top-buttons">
-    <a href="{{ url('/vigenere') }}" class="nav-btn">← Enkripsi</a>
-    <a href="{{ url('/dekripsi/vigenere') }}" class="nav-btn">Dekripsi Vigenère</a>
-  </div>
 
-  <div class="card">
-    <h1>KRIPTOGRAFI - VIGENÈRE (Huruf + Angka)</h1>
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark px-4 mb-4"
+     style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+  <a class="navbar-brand fw-bold" href="/">
+    <i class="bi bi-shield-lock"></i> EnkripsiApp
+  </a>
+</nav>
 
-    <form method="POST" action="{{ route('vigenere.encrypt') }}">
-      @csrf
-      <label for="plaintext">PLAINTEXT</label>
-      <textarea name="plaintext" id="plaintext" rows="3" required>{{ old('plaintext', $plaintext ?? '') }}</textarea>
+<!-- TOP BUTTONS (Tidak dihilangkan!) -->
+<div class="top-buttons d-flex gap-2 ms-4 mb-3">
+    <a href="{{ url('/vigenere') }}">← Enkripsi</a>
+    <a href="{{ url('/dekripsi/vigenere') }}">Dekripsi Vigenère</a>
+</div>
 
-      <label for="key">KEY (Huruf, Angka, atau Kombinasi)</label>
-      <input type="text" name="key" id="key" value="{{ old('key', $key ?? '') }}" required>
+<div class="container mt-3 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
 
-      <button type="submit">Encrypt</button>
-    </form>
+      <div class="glass-card">
 
-    @if(isset($ciphertext))
-    <div id="resultBox">
-      @if(isset($convertedKey))
-      <label for="convertedKey">KEY KONVERSI (Angka → Huruf)</label>
-      <input type="text" id="convertedKey" value="{{ $convertedKey }}" readonly>
-      @endif
+        <h2 class="fw-bold text-center mb-2">🔐 Vigenère Cipher (Huruf + Angka)</h2>
+        <p class="text-center mb-4 text-light">
+          Masukkan plaintext serta key untuk melakukan enkripsi.
+        </p>
 
-      <label for="autoKey">KEY OTOMATIS</label>
-      <input type="text" id="autoKey" value="{{ $autoKey }}" readonly>
+        <!-- FORM -->
+        <form method="POST" action="{{ route('vigenere.encrypt') }}">
+          @csrf
 
-      <label for="ciphertext">HASIL ENKRIPSI</label>
-      <textarea id="ciphertext" rows="3" readonly>{{ $ciphertext }}</textarea>
-      <button id="copyBtn" class="btn-copy">Copy to Clipboard</button>
+          <label class="fw-bold mb-1">PLAINTEXT</label>
+          <textarea name="plaintext" id="plaintext" rows="3" class="form-control mb-3" required>{{ old('plaintext', $plaintext ?? '') }}</textarea>
 
-      <button id="nextBtn" class="btn-next">Lanjut ke Caesar Cipher</button>
+          <label class="fw-bold mb-1">KEY (Huruf, Angka, atau Kombinasi)</label>
+          <input type="text" name="key" id="key" class="form-control mb-4"
+                 value="{{ old('key', $key ?? '') }}" required>
 
-      <p class="note">
-        Anda telah menyelesaikan tahap pertama enkripsi dengan metode <strong>Vigenère Cipher (Huruf + Angka)</strong>.<br>
-        Selanjutnya, teks ini bisa diproses lagi dengan Caesar Cipher.
-      </p>
+          <button class="btn-glow w-100" type="submit">Enkripsi</button>
+        </form>
+
+        <!-- HASIL -->
+        @if(isset($ciphertext))
+        <div class="mt-4">
+
+          @if(isset($convertedKey))
+          <label class="fw-bold mb-1">KEY KONVERSI (Angka → Huruf)</label>
+          <input type="text" class="form-control mb-3" value="{{ $convertedKey }}" readonly>
+          @endif
+
+          <label class="fw-bold mb-1">KEY OTOMATIS</label>
+          <input type="text" class="form-control mb-3" value="{{ $autoKey }}" readonly>
+
+          <label class="fw-bold mb-1">HASIL ENKRIPSI</label>
+          <textarea id="ciphertext" rows="3" class="form-control" readonly>{{ $ciphertext }}</textarea>
+
+          <button id="copyBtn" class="copy-btn mt-2">Copy</button>
+
+          <a href="/caesar" class="btn btn-primary w-100 mt-3">
+            Lanjut ke Caesar Cipher →
+          </a>
+
+          <p class="text-center text-light mt-3 small">
+            Anda telah menyelesaikan tahap pertama enkripsi menggunakan <strong>Vigenère Cipher</strong>.  
+            Lanjutkan proses enkripsi berikutnya.
+          </p>
+        </div>
+        @endif
+
+      </div>
+
     </div>
-    @endif
   </div>
+</div>
 
-  <script>
-    const copyBtn = document.getElementById("copyBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const ciphertextEl = document.getElementById("ciphertext");
+<script>
+  const copyBtn = document.getElementById("copyBtn");
+  const ciphertextEl = document.getElementById("ciphertext");
 
-    if (copyBtn) {
-      copyBtn.addEventListener("click", () => {
-        navigator.clipboard.writeText(ciphertextEl.value).then(() => {
-          copyBtn.textContent = "Copied!";
-          setTimeout(() => copyBtn.textContent = "Copy to Clipboard", 2000);
-        });
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(ciphertextEl.value).then(() => {
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => copyBtn.textContent = "Copy", 2000);
       });
-    }
+    });
+  }
 
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
-        window.location.href = "/caesar";
-      });
-    }
-  </script>
-  <script>
   const plaintextInput = document.getElementById("plaintext");
   const keyInput = document.getElementById("key");
 
-  // Fungsi untuk membatasi panjang key sesuai panjang plaintext
   function limitKeyLength() {
-    const plaintextLength = plaintextInput.value.length;
-    if (keyInput.value.length > plaintextLength) {
-      keyInput.value = keyInput.value.slice(0, plaintextLength);
+    const len = plaintextInput.value.length;
+    if (keyInput.value.length > len) {
+      keyInput.value = keyInput.value.slice(0, len);
     }
   }
 
-  // Saat user mengetik plaintext, batasi ulang panjang key
-  plaintextInput.addEventListener("input", () => {
-    limitKeyLength();
-  });
-
-  // Saat user mengetik key, pastikan panjang tidak lebih dari plaintext
-  keyInput.addEventListener("input", () => {
-    limitKeyLength();
-  });
+  plaintextInput.addEventListener("input", limitKeyLength);
+  keyInput.addEventListener("input", limitKeyLength);
 </script>
 
 </body>

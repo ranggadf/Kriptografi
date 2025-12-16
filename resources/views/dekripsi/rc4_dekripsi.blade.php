@@ -1,225 +1,196 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>RC4 Cipher - Dekripsi</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Dekripsi Caesar Cipher</title>
+
+  <!-- BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
     body {
-      background: #0f172a;
-      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #09101c, #0e7490);
+      min-height: 100vh;
       color: #e6eef8;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
     }
 
-    .card {
-      background: #0b1220;
-      padding: 30px;
-      border-radius: 12px;
-      width: 500px;
-      position: relative;
-    }
-
-    h1 {
-      text-align: center;
-      color: #34d399;
-      margin-bottom: 20px;
-    }
-
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
+    .glass-card {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 18px;
+      padding: 35px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.35);
     }
 
     textarea, input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 8px;
-      border: none;
-      background: #1e293b;
-      color: #e6eef8;
-      resize: none;
+      background: rgba(255,255,255,0.1) !important;
+      border: 1px solid rgba(255,255,255,0.2) !important;
+      color: #e6eef8 !important;
     }
 
-    input[readonly], textarea[readonly] {
-      background: #334155;
-      color: #94a3b8;
+    textarea[readonly] {
+      background: rgba(255,255,255,0.15) !important;
+      color: #aab9d6 !important;
     }
 
-    button {
-      margin-top: 15px;
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #34d399;
+    .btn-glow {
+      background: #22d3ee;
       color: #000;
+      border-radius: 10px;
+      padding: 12px;
       font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s;
+      box-shadow: 0 0 14px rgba(34,211,238,0.45);
+      width: 100%;
+      transition: .3s;
     }
-
-    button:hover {
-      background: #22c55e;
-    }
+    .btn-glow:hover { background:#0ea5e9; color:#000; }
 
     .btn-copy {
-      margin-top: 8px;
-      background: #22c55e;
-      font-size: 14px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      width: auto;
-      font-weight: bold;
+      background:#34d399;
+      color:#000;
+      border-radius:10px;
+      font-weight:bold;
+      padding:8px 14px;
+      border:none;
+      transition:0.3s;
     }
+    .btn-copy:hover { background:#22c55e; }
 
-    .btn-copy:hover {
-      background: #16a34a;
-    }
-
-    .error {
-      color: #f87171;
-      margin-top: 5px;
+    .note-box {
+      background: rgba(255,255,255,0.12);
+      padding: 14px;
+      border-left: 4px solid #22d3ee;
+      border-radius: 10px;
+      color: #c7dfff;
       font-size: 14px;
     }
 
-    .note {
-      margin-top: 15px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #cbd5e1;
-      background: #1e293b;
-      padding: 10px;
-      border-radius: 8px;
+    .btn-next {
+      background:#3b82f6;
+      color:white;
+      padding:12px;
+      border-radius:10px;
+      width:100%;
+      font-weight:bold;
+      border:none;
+      margin-top:10px;
+      transition:.3s;
     }
+    .btn-next:hover { background:#2563eb; }
+    .btn-next:disabled { background:#475569; cursor:not-allowed; }
 
-    .note strong {
-      color: #34d399;
-    }
-
-    /* Tombol Navigasi kiri */
-    .nav-buttons {
+    /* floating nav kiri */
+    .nav-floating {
       position: fixed;
-      top: 20px;
+      top: 90px;
       left: 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      z-index: 999;
     }
 
     .nav-btn {
-      background: #1e293b;
-      color: #34d399;
-      border: 2px solid #34d399;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: bold;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      color: #22d3ee;
       text-decoration: none;
+      backdrop-filter: blur(6px);
+      transition: 0.3s;
       width: 200px;
       text-align: center;
-      transition: all 0.2s;
     }
-
     .nav-btn:hover {
-      background: #34d399;
-      color: #0f172a;
-    }
-
-    /* Tombol bawah (ke AES) */
-    .btn-next {
-      margin-top: 15px;
-      background: #3b82f6;
-      color: #fff;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
-      width: 100%;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn-next:hover {
-      background: #2563eb;
-    }
-
-    .btn-next:disabled {
-      background: #475569;
-      cursor: not-allowed;
+      background: rgba(255,255,255,0.25);
+      color: #000;
     }
   </style>
-
-  <script>
-    function copyToClipboard() {
-      const copyText = document.getElementById("plaintext");
-      if (!copyText) return;
-
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-
-      // Aktifkan tombol lanjut ke AES
-      const nextBtn = document.getElementById("nextBtn");
-      if (nextBtn) {
-        nextBtn.disabled = false;
-      }
-
-      alert("✅ Hasil dekripsi RC4 berhasil disalin!\nSekarang Anda bisa lanjut ke dekripsi AES.");
-    }
-  </script>
 </head>
+
 <body>
-  <!-- Navigasi kiri -->
-  <div class="nav-buttons">
-    <a href="{{ url('/rc4') }}" class="nav-btn">← Kembali ke Enkripsi RC4</a>
-    <a href="{{ url('/dekripsi') }}" class="nav-btn">🏠 Halaman Dekripsi</a>
-  </div>
 
-  <!-- Card utama -->
-  <div class="card">
-    <h1>RC4 Cipher - Dekripsi</h1>
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark px-4 mb-4"
+     style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+  <a class="navbar-brand fw-bold" href="/">
+    <i class="bi bi-shield-lock"></i> EnkripsiApp
+  </a>
+</nav>
 
-    <form method="POST" action="{{ route('rc4.decrypt') }}">
-      @csrf
+<!-- NAV FLOATING -->
+<div class="nav-floating">
+    <a href="{{ url('/caesar') }}" class="nav-btn">← Kembali ke Enkripsi Caesar</a>
+    <a href="{{ url('/dekripsi') }}" class="nav-btn">🏠 Menu Dekripsi</a>
+</div>
 
-      <label for="ciphertext">Ciphertext (Base64)</label>
-      <textarea name="ciphertext" id="ciphertext" rows="4">{{ old('ciphertext') }}</textarea>
-      @error('ciphertext')
-        <div class="error">{{ $message }}</div>
-      @enderror
+<!-- MAIN CONTENT -->
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
 
-      <label for="key">Key</label>
-      <input type="text" name="key" id="key" value="{{ old('key') }}">
-      @error('key')
-        <div class="error">{{ $message }}</div>
-      @enderror
+      <div class="glass-card">
 
-      <button type="submit">🔓 Decrypt</button>
-    </form>
+        <h2 class="fw-bold text-center mb-2">🔓 Dekripsi Caesar Cipher</h2>
+        <p class="text-center mb-4 text-light">Tahap ketiga setelah AES</p>
 
-    @isset($plaintext)
-      <label for="plaintext">Hasil Dekripsi</label>
-      <textarea id="plaintext" readonly rows="3">{{ $plaintext }}</textarea>
-      <button type="button" class="btn-copy" onclick="copyToClipboard()">📋 Copy</button>
+        <!-- FORM -->
+        <form action="{{ route('caesar.decrypt') }}" method="POST">
+          @csrf
 
-      <p class="note">
-        ✅ Ini adalah hasil akhir dari <strong>dekripsi RC4</strong>.<br>
-        Salin hasil ini terlebih dahulu sebelum lanjut ke tahap berikutnya:
-        <strong>AES → Caesar → Vigenère</strong>.
-      </p>
+          <label class="fw-bold mb-1">Ciphertext</label>
+          <textarea id="ciphertext" name="ciphertext" class="form-control mb-3" rows="4" required>{{ old('ciphertext', $ciphertext ?? '') }}</textarea>
 
-      <!-- Tombol Lanjut ke AES di bawah -->
-      <form action="{{ url('/dekripsi/aes') }}" method="GET">
-        <button type="submit" id="nextBtn" class="btn-next" disabled>
-          ➡️ Lanjut ke Dekripsi AES
+          <label class="fw-bold mb-1">Key (huruf)</label>
+          <input type="text" id="key" name="key" class="form-control mb-3" value="{{ old('key', $key ?? '') }}" required>
+
+          <button type="submit" class="btn-glow">Dekripsi Sekarang</button>
+        </form>
+
+        @isset($plaintext)
+        <label class="fw-bold mt-4">Hasil Dekripsi</label>
+        <textarea readonly id="plaintext" class="form-control mt-1" rows="3">{{ $plaintext }}</textarea>
+
+        <button type="button" class="btn-copy mt-2" onclick="copyToClipboard()">
+          📋 Copy
         </button>
-      </form>
-    @endisset
+
+        <div class="note-box mt-3">
+          Hasil dekripsi Caesar telah berhasil dibuat.
+          Lanjutkan ke tahap terakhir: <strong>Vigenère Cipher</strong>.
+        </div>
+
+        <form action="{{ url('/dekripsi/vigenere') }}" method="GET">
+          <button type="submit" id="nextBtn" class="btn-next" disabled>
+            ➡️ Lanjut ke Dekripsi Vigenère
+          </button>
+        </form>
+        @endisset
+
+      </div>
+
+    </div>
   </div>
+</div>
+
+<script>
+function copyToClipboard() {
+  const text = document.getElementById("plaintext");
+  text.select();
+  text.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(text.value);
+
+  document.getElementById("nextBtn").disabled = false;
+
+  alert("✅ Hasil Caesar berhasil disalin! Lanjutkan ke Vigenère.");
+}
+</script>
+
 </body>
 </html>

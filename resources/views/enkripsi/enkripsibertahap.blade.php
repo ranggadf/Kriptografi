@@ -2,130 +2,147 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <title>Enkripsi Bertahap (Vigenère → Caesar → AES → RC4)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Enkripsi Bertahap</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
-    body { 
-      background:#0f172a; 
-      font-family:Arial; 
-      color:#e6eef8; 
-      margin:0; 
-      padding:40px; 
-      display:flex; 
-      justify-content:center; 
-    }
+      body {
+          background: linear-gradient(135deg, #09101c, #0e7490);
+          min-height: 100vh;
+          color: #e6eef8;
+      }
 
-    .container { 
-      max-width:900px; 
-      width:100%; 
-      background:#0b1220; 
-      padding:30px; 
-      border-radius:12px; 
-      box-shadow:0 4px 12px rgba(0,0,0,0.4); 
-    }
+      .glass-card {
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 18px;
+          padding: 40px;
+          box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+      }
 
-    h1 { 
-      text-align:center; 
-      color:#34d399; 
-      margin-bottom:20px; 
-    }
+      .step-box {
+          background: rgba(255,255,255,0.08);
+          padding: 15px 18px;
+          border-left: 4px solid #22d3ee;
+          border-radius: 12px;
+          margin-top: 15px;
+          word-break: break-all;
+      }
 
-    label { 
-      display:block; 
-      margin-top:15px; 
-      font-weight:bold; 
-    }
+      .btn-glow {
+          box-shadow: 0 0 12px rgba(34,211,238,0.5);
+      }
 
-    input, textarea { 
-      width:100%; 
-      padding:10px; 
-      margin-top:6px; 
-      border:none; 
-      border-radius:8px; 
-      background:#1e293b; 
-      color:#e6eef8; 
-    }
+      textarea, input {
+          background: rgba(255,255,255,0.07) !important;
+          color: #e6eef8 !important;
+          border: 1px solid rgba(255,255,255,0.15) !important;
+      }
 
-    .btn { 
-      margin-top:20px; 
-      width:100%; 
-      padding:12px; 
-      border:none; 
-      border-radius:8px; 
-      background:#34d399; 
-      color:#000; 
-      font-weight:bold; 
-      cursor:pointer; 
-    }
+      .note-box {
+          background: rgba(255,255,255,0.08);
+          border-left: 4px solid #22d3ee;
+          padding: 15px;
+          border-radius: 12px;
+      }
 
-    .btn:hover { 
-      background:#22c55e; 
-    }
-
-    .result { 
-      background:#1e293b; 
-      padding:15px; 
-      border-radius:8px; 
-      margin-top:20px; 
-      word-break: break-all;
-    }
-
-    .step { 
-      margin-top:15px; 
-      background:#111827; 
-      padding:10px; 
-      border-radius:8px; 
-      border-left:4px solid #34d399; 
-      word-break: break-all;
-    }
-
-    .note { 
-      background:#1e293b; 
-      padding:12px; 
-      border-left:4px solid #34d399; 
-      border-radius:6px; 
-      color:#a7f3d0; 
-      margin-bottom:20px; 
-    }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Enkripsi Bertahap</h1>
-    <div class="note">
-      <strong>🧩 Catatan:</strong> Masukkan plaintext dan 1 kunci utama.<br>
-      Sistem akan mengenkripsi secara berurutan: <b>Vigenère → Caesar → AES → RC4</b>.
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark navbar-expand-lg px-4" 
+     style="background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+  <a class="navbar-brand fw-bold" href="/">
+    <i class="bi bi-shield-lock"></i> EnkripsiApp
+  </a>
+</nav>
+
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="glass-card">
+
+        <!-- JUDUL -->
+        <h2 class="fw-bold mb-3 text-center">
+          🔐 Enkripsi Bertahap
+        </h2>
+
+        <p class="text-center mb-4">
+          Proses berurutan: <strong>Vigenère → Caesar → AES → RC4</strong>
+        </p>
+
+        <!-- NOTE -->
+        <div class="note-box mb-4">
+          Masukkan plaintext dan 1 key utama untuk mengenkripsi semua tahap secara otomatis.
+        </div>
+
+        <!-- ERROR -->
+        @if ($errors->any())
+        <div class="alert alert-danger">
+          ⚠️ {{ $errors->first() }}
+        </div>
+        @endif
+
+        <!-- FORM -->
+        <form method="POST" action="{{ route('enkripsibertahap.encrypt') }}">
+          @csrf
+
+          <label class="fw-semibold mt-2">Plaintext</label>
+          <textarea name="plaintext" rows="4" class="form-control" required>{{ old('plaintext', $plaintext ?? '') }}</textarea>
+
+          <label class="fw-semibold mt-3">Key Utama</label>
+          <input type="text" name="key" class="form-control" value="{{ old('key', $key ?? '') }}" required>
+
+          <button class="btn btn-info w-100 mt-4 fw-semibold btn-glow">
+            <i class="bi bi-lock"></i> Enkripsi Semua Tahap
+          </button>
+        </form>
+
+
+        <!-- HASIL -->
+        @isset($finalCipher)
+        <hr class="my-4">
+
+        <h4 class="fw-bold text-center mb-3">Hasil Enkripsi</h4>
+
+        <div class="step-box">
+          <strong>Setelah Vigenère:</strong><br> {{ $vigenereCipher }}
+        </div>
+
+        <div class="step-box">
+          <strong>Setelah Caesar:</strong><br> {{ $caesarCipher }}
+        </div>
+
+        <div class="step-box">
+          <strong>Setelah AES:</strong><br> {{ $aesCipher }}
+        </div>
+
+        <div class="step-box">
+          <strong>Setelah RC4 (Final):</strong><br> {{ $finalCipher }}
+        </div>
+
+        <a href="/dekripsibertahap" 
+           class="btn btn-outline-light w-100 mt-4 fw-semibold">
+          🔑 Lanjut ke Dekripsi Bertahap
+        </a>
+
+        @endisset
+
+      </div>
+
     </div>
-
-    @if ($errors->any())
-      <div class="result" style="border-left:4px solid red;">
-        <strong>⚠️ Terjadi kesalahan:</strong><br>
-        {{ $errors->first() }}
-      </div>
-    @endif
-
-    <form method="POST" action="{{ route('enkripsibertahap.encrypt') }}">
-      @csrf
-      <label for="plaintext">Plaintext</label>
-      <textarea name="plaintext" rows="4" required>{{ old('plaintext', $plaintext ?? '') }}</textarea>
-
-      <label for="key">Key Utama</label>
-      <input type="text" name="key" value="{{ old('key', $key ?? '') }}" required>
-
-      <button class="btn">Enkripsi Semua Tahap</button>
-    </form>
-
-    @isset($finalCipher)
-      <div class="result">
-        <div class="step"><strong>Vigenère →</strong><br>{{ $vigenereCipher }}</div>
-        <div class="step"><strong>Caesar →</strong><br>{{ $caesarCipher }}</div>
-        <div class="step"><strong>AES →</strong><br>{{ $aesCipher }}</div>
-        <div class="step"><strong>RC4 (Cipher Final) →</strong><br>{{ $finalCipher }}</div>
-            <a href="/dekripsibertahap" class="btn" style="text-align:center; display:block; margin-top:15px;">
-      🔑 Lanjut ke Dekripsi Bertahap
-    </a>
-
-      </div>
-    @endisset
   </div>
+</div>
+
 </body>
 </html>

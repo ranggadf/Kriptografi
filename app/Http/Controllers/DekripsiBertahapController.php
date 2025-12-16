@@ -110,46 +110,43 @@ class DekripsiBertahapController extends Controller
     // ------------------
     // Vigenère Auto-Key
     // ------------------
-    private function convertVigenereKey($key)
-    {
-        $converted = '';
-        foreach (str_split($key) as $char) {
-            if (ctype_digit($char)) $converted .= chr((intval($char) % 26) + 65);
-            else $converted .= strtoupper($char);
-        }
-        return $converted;
-    }
+ private function vigenereAutoDecrypt($ciphertext, $key)
+{
+    $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $key = strtoupper($this->convertNumericKey($key));
 
-    private function vigenereAutoDecrypt($ciphertext, $key)
-    {
-        $ciphertext = strtoupper($ciphertext);
-        $key = $this->convertVigenereKey($key);
-        $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $mod = strlen($alphabet);
+    $plaintext = '';
+    $keyStream = $key;
+    $j = 0;
 
-        $plaintext = '';
-        $keyStream = $key;
-        $j = 0;
+    for ($i = 0; $i < strlen($ciphertext); $i++) {
+        $ch = $ciphertext[$i];
 
-        for ($i = 0; $i < strlen($ciphertext); $i++) {
-            $c = $ciphertext[$i];
+        if (ctype_alpha($ch)) {
+            $c = strtoupper($ch);
             $cIndex = strpos($alphabet, $c);
 
-            if ($cIndex !== false) {
-                $kIndex = strpos($alphabet, $keyStream[$j]);
-                if ($kIndex === false) $kIndex = 0;
+            $k = $keyStream[$j];
+            $kIndex = strpos($alphabet, $k);
 
-                $pIndex = ($cIndex - $kIndex + $mod) % $mod;
-                $p = $alphabet[$pIndex];
-                $plaintext .= $p;
+            $pIndex = ($cIndex - $kIndex + 26) % 26;
+            $p = $alphabet[$pIndex];
 
-                $keyStream .= $p;
-                $j++;
-            } else $plaintext .= $c;
+            // Kembalikan case asli
+            $plaintext .= ctype_lower($ch) ? strtolower($p) : $p;
+
+            // tambahkan p ke keyStream
+            $keyStream .= $p;
+
+            $j++;
+        } else {
+            $plaintext .= $ch;
         }
-
-        return $plaintext;
     }
+
+    return $plaintext;
+}
+
 
     // ------------------
     // Halaman Form

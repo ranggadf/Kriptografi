@@ -57,41 +57,79 @@ class EnkripsiBertahapController extends Controller
         return $result;
     }
 
-    // 🔹 Enkripsi Vigenère Auto-key
-    private function vigenereEncrypt($plaintext, $key)
-    {
-        $plaintext = strtoupper($plaintext);
-        $keyInput = strtoupper($key);
+ // 🔹 Enkripsi Vigenère Auto-key
+private function vigenereEncrypt($plaintext, $key)
+{
+    // Alphabet yang digunakan untuk enkripsi
+    $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-        $keyConverted = $this->convertNumericKey($keyInput);
+    // Ubah key menjadi uppercase, dan convert key jika berupa angka
+    $key = strtoupper($this->convertNumericKey($key));
 
-        $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $mod = strlen($alphabet);
+    // AutoKey diawali dari key asli
+    $autoKey = $key;
 
-        $autoKey = $keyConverted;
-        $i = 0;
-        while (strlen($autoKey) < strlen($plaintext)) {
-            $autoKey .= $plaintext[$i];
-            $i++;
-        }
+    // Buang semua karakter non-huruf dari plaintext (misal spasi, angka, simbol)
+    // lalu ubah ke uppercase untuk kebutuhan pembuatan auto-key
+    $cleanPlain = strtoupper(preg_replace('/[^A-Za-z]/', '', $plaintext));
 
-        $ciphertext = '';
-        for ($j = 0; $j < strlen($plaintext); $j++) {
-            $p = $plaintext[$j];
-            $k = $autoKey[$j];
+    // Inisialisasi index untuk menambah plaintext ke auto-key
+    $i = 0;
+
+    // Selama autoKey lebih pendek dari plaintext
+    // tambahkan huruf plaintext ke autoKey (membentuk auto-key sequence)
+    while (strlen($autoKey) < strlen($cleanPlain)) {
+        $autoKey .= $cleanPlain[$i++];
+    }
+
+    // Variabel untuk menyimpan hasil cipher
+    $ciphertext = '';
+
+    // Index autoKey untuk dipakai karakter demi karakter
+    $j = 0;
+
+    // Loop untuk setiap karakter dalam plaintext asli
+    for ($i = 0; $i < strlen($plaintext); $i++) {
+
+        // Ambil 1 karakter plaintext
+        $ch = $plaintext[$i];
+
+        // Jika huruf alfabet (A-Z / a-z)
+        if (ctype_alpha($ch)) {
+
+            // Ambil huruf uppercase untuk perhitungan index
+            $p = strtoupper($ch);
+
+            // Cari posisi huruf plaintext dalam alphabet (0–25)
             $pIndex = strpos($alphabet, $p);
+
+            // Ambil huruf auto-key sesuai index ke-j
+            $k = $autoKey[$j++];
+
+            // Cari posisi huruf key dalam alphabet (0–25)
             $kIndex = strpos($alphabet, $k);
 
-            if ($pIndex !== false && $kIndex !== false) {
-                $cIndex = ($pIndex + $kIndex) % $mod;
-                $ciphertext .= $alphabet[$cIndex];
-            } else {
-                $ciphertext .= $p;
-            }
-        }
+            // Rumus enkripsi: (plaintextIndex + keyIndex) mod 26
+            $cIndex = ($pIndex + $kIndex) % 26;
 
-        return [$ciphertext, $keyConverted, $autoKey];
+            // Ambil huruf hasil enkripsi
+            $c = $alphabet[$cIndex];
+
+            // Kembalikan huruf sesuai case aslinya (uppercase/lowercase)
+            $ciphertext .= ctype_lower($ch) ? strtolower($c) : $c;
+
+        } else {
+
+            // Jika bukan huruf (angka, spasi, simbol): tidak dienkripsi
+            $ciphertext .= $ch;
+        }
     }
+
+    // Return ciphertext, key asli after convert, dan autoKey penuh
+    return [$ciphertext, $key, $autoKey];
+}
+
+
 
     // 🔹 Enkripsi AES
     private function aesEncrypt($plaintext, $key)
@@ -117,6 +155,7 @@ class EnkripsiBertahapController extends Controller
 
         $i = $j = 0;
         $result = '';
+        // "
         $data = array_values(unpack('C*', $data));
 
         foreach ($data as $byte) {
